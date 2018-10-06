@@ -1,7 +1,8 @@
 # coding=utf-8
 
+from datetime import datetime, date
 import logging, os, pickle
-from datetime import datetime
+
 from flask import Flask, json, render_template
 from flask_ask import Ask, request, session, question, statement
 
@@ -20,22 +21,11 @@ def start_session():
 
 @ask.launch
 def handle_launch():
-    """
-    (QUESTION) Responds to the launch of the Skill with a welcome statement and a card.
-    Templates:
-    * Initial statement: 'welcome'
-    * Reprompt statement: 'welcome_re'
-    * Card title: '{{ cookiecutter.skill_name }}
-    * Card body: 'welcome_card'
-    """
     logging.debug("Launch at {}".format(datetime.now().isoformat()))
-
     welcome_text = render_template('welcome')
     welcome_re_text = render_template('welcome_re')
     welcome_card_text = render_template('welcome_card')
-
     return question(welcome_text).reprompt(welcome_re_text).standard_card(title="Pills Here", text=welcome_card_text)
-
 
 # Built-in intents http://d.pr/KKyx
 @ask.intent('AMAZON.StopIntent')
@@ -73,39 +63,58 @@ def pills():
 @ask.intent('GiveMedsIntent')
 def give_meds():
     text = render_template('give_meds', med_count=data['med_count'])
-    return statement(text).standard_card(title="Your Medications", text=text)
+    return question(text).standard_card(title="Your Medications", text=text)
 
 @ask.intent('TakeMedsIntent')
 def take_meds():
     print(get_dialog_state())
     data['points'] = data['points'] + data['med_count']
     data['day_streak'] = data['day_streak'] + 1
+    data['recent'] = datetime.utcnow()
     save_data()
     text = render_template('take_meds')
     re_text = render_template('take_meds_re')
     card_text = render_template('take_meds_card')
     return question(text).reprompt(re_text).standard_card(title="Just Do It", text=card_text)
 
+@ask.intent('RecentIntent')
+def recent_meds():
+    print(get_dialog_state())
+    delta = datetime.utcnow() - data['recent']
+    delta = days_hours_minutes(delta)
+    text = render_template('recent', delta=str(delta))
+    return question(text).standard_card(title="Recent meds", text=text)
+
+def days_hours_minutes(td):
+    d = td.days
+    h = td.seconds//3600
+    m = (td.seconds//60)%60
+    t1 = ' ' if d==0 else str(d) + " days"
+    t2 = ' ' if h==0 else str(h) + " hours"
+    t3 = ' ' if m==0 else str(m) + " minutes"
+    return (t1 + t2 + t3)
+#     return td.days, td.seconds//3600, (td.seconds//60)%60
+
 @ask.intent('UpdateIntent')
 def update_meds():
     text = render_template('update_success') #add reprompt
     save_data()
-    return statement(text).standard_card(title="Medications Updated", text=text)
+    return question(text).standard_card(title="Medications Updated", text=text)
 
 @ask.intent('RewardsIntent')
 def rewards():
     text = render_template('rewards_prog', reward_delta=data['reward_delta']) 
-    return statement(text).standard_card(title="Rewards Status", text=text)
+    return question(text).standard_card(title="Rewards Status", text=text)
 
 @ask.intent('ReportIntent')
 def parent_report():
     text = render_template('report', day_streak=data['day_streak'])
-    return statement(text).standard_card(title="Status Reports", text=text)
+    return question(text).standard_card(title="Status Reports", text=text)
 
 @ask.intent('PointsIntent')
 def points_report():
     text = render_template('points', total=data['points']) 
-    return statement(text).standard_card(title="Points", text=text)
+    return question(text).standard_card(title="Points", text=text)
 
 @ask.session_ended
 def session_ended():
@@ -128,7 +137,6 @@ def before_first_request():
     
 def get_dialog_state():
     return session['dialogState']
-    
 
 if __name__ == '__main__':
     if 'ASK_VERIFY_REQUESTS' in os.environ:
@@ -138,5 +146,4 @@ if __name__ == '__main__':
     with open('data.p', 'rb') as fh:
         data = pickle.load(fh)
         print(str(data))
-    app.run(debug=True)
-#     app.run(debug=True, threaded=True)
+    app.run(debug=True, threaded=True)

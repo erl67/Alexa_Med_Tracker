@@ -1,5 +1,7 @@
-welcome: "Welcome to Medication Scheduler"
-help_text: "You can use this skill to encourage healthy habits"
+welcome: |
+  Welcome to Medication Scheduler
+help_text: | 
+  You can use this skill to encourage healthy habits
 
 welcome_re: |
   Medication Tracker. How may I help you?
@@ -30,7 +32,7 @@ bad: |
 worse: |
   Get your affairs in order.
 pills: |
-  Pills Here
+  Great Job
 rewards_prog: |
   You have {{ reward_delta }} days until your next level reward.
 points: |
@@ -43,6 +45,8 @@ logging_success: |
   Your progress has been updated.
 logging_fail: |
   I am unable to save the current days intake.
+recent: |
+  Your last medication was taken {{ delta }} ago.
 
   
 
