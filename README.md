@@ -1,22 +1,16 @@
-# Name: Pitt #&#xfeff;hackthishelpkids
-
-## Installation
-
-1. 
+# [#&#xfeff;hackthishelpkids](https://www.givetochildrens.org/hackthishelpkids)
 
 ## Running the App
 
-1. run app
+1. run app using python
 
 2. ngrok http 5000 to forward port
 
-3. set endpoint on amazon developer port for skill
+3. build skill Intents on amazon developer portal
 
-4. build skill
+4. set endpoint on portal to ngrok.io address
 
 5. enable skill in alexa
-
-
 
 
 ### Useful Links
@@ -29,5 +23,3 @@ https://developer.amazon.com/blogs/post/Tx14R0IYYGH3SKT/Flask-Ask-A-New-Python-F
 https://github.com/chrisvoncsefalvay/cookiecutter-flask-ask
 
 https://dashboard.ngrok.com/get-started
-
-https://stackoverflow.com/questions/29846087/microsoft-visual-c-14-0-is-required-unable-to-find-vcvarsall-bat
