@@ -1,1 +1,15 @@
-hello: Hello, {{ firstname }}
+launch: "launch welcome"
+welcome: "Welcome to the Alexa Skills Kit, you can say hello"
+hello: "Hello world!"
+help: "You can say hello to me!"
+
+welcome_re: |
+  Medication Tracker. How may I help you?
+welcome_card: |
+  Medication Tracker is an Alexa skill written by ...
+stop_bye: |
+  Goodbye!
+cancel_bye: |
+  OK, goodbye!
+help_text: |
+  Medication Tracker is an Alexa skill that does things. This is where the developer would normally explain how to do them.
