@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Error 404{% endblock %}
+
+{% block body %}
+<div class="jumbotron bg-white text-center">
+	<h1>404</h1>
+	<h3>Page Not Found</h3>
+	<h6 id="msg">{{ errno }}</h6>
+</div>
+<script type='text/javascript'>
+
+window.onload = function(){ 
+	document.getElementById('page-main').removeAttribute('style');
+	document.getElementById('msg').removeAttribute('style');
+	document.getElementById('page').removeAttribute('style');
+}
+
+</script>
+{% endblock %}
