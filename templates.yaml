@@ -14,7 +14,11 @@ help_text: |
 give_meds: |
   You are scheduled to take {{ med_count }} things today
 take_meds: |
-  Are they all gone?
+  Please take your medication now
+take_meds_re: |
+  Are taking your medication?
+take_meds_card: |
+  Take to make the donuts
 report: |
   You have been on schedule for {{ day_streak }} days.
 good: |

@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import logging, os, re
+import logging, os, pickle
 from datetime import datetime
 from flask import Flask, json, render_template
 from flask_ask import Ask, request, session, question, statement
@@ -8,30 +8,16 @@ from flask_ask import Ask, request, session, question, statement
 app = Flask(__name__)
 ask = Ask(app, "/")
 logging.getLogger("flask_ask").setLevel(logging.DEBUG)
-
-med_count = 5 
-day_streak = 3
-reward_delta = 8
-points = 100
-
-# Session starter
+data = dict()
 
 @ask.on_session_started
 def start_session():
-    """
-    Fired at the start of the session, this is a great place to initialise state variables and the like.
-    """
-    print("👁️‍🗨️")
-    logging.debug("👁️‍🗨️Session started at {}".format(datetime.now().isoformat()))
+    print("📗\tStarting Session")
+    logging.debug("Session started at {}".format(datetime.now().isoformat()))
 
 # Launch intent
-#
-# This intent is fired automatically at the point of launch.
-# Use it as a way to introduce your Skill and say hello to the user. If you envisage your Skill to work using the
-# one-shot paradigm (i.e. the invocation statement contains all the parameters that are required for returning the
-# result
+# This should query/update database and reconcile schedule also
 
-# @ask.intent('LaunchIntent')
 @ask.launch
 def handle_launch():
     """
@@ -48,12 +34,10 @@ def handle_launch():
     welcome_re_text = render_template('welcome_re')
     welcome_card_text = render_template('welcome_card')
 
-    return question(welcome_text).reprompt(welcome_re_text).standard_card(title="Pills Here",
-                                                                          text=welcome_card_text)
+    return question(welcome_text).reprompt(welcome_re_text).standard_card(title="Pills Here", text=welcome_card_text)
 
 
-# Built-in intents
-# More about built-in intents: http://d.pr/KKyx
+# Built-in intents http://d.pr/KKyx
 @ask.intent('AMAZON.StopIntent')
 def handle_stop():
     farewell_text = render_template('stop_bye')
@@ -82,52 +66,64 @@ def start_over():
 @ask.intent('PillsIntent')
 def pills():
     text = render_template('pills')
+    data['points'] = data['points'] + 1
+    save_data()
     return statement(text).standard_card(title="Pills Here", text=text)
 
 @ask.intent('GiveMedsIntent')
 def give_meds():
-    text = render_template('give_meds', med_count=med_count)
+    text = render_template('give_meds', med_count=data['med_count'])
     return statement(text).standard_card(title="Your Medications", text=text)
 
 @ask.intent('TakeMedsIntent')
 def take_meds():
-    text = render_template('take_meds') #add reprompt
-    return statement(text).standard_card(title="Did you take your meds?", text=text)
+    data['points'] = data['points'] + data['med_count']
+    data['day_streak'] = data['day_streak'] + 1
+    save_data()
+    text = render_template('take_meds')
+    re_text = render_template('take_meds_re')
+    card_text = render_template('take_meds_card')
+    return question(text).reprompt(re_text).standard_card(title="Just Do It", text=card_text)
 
 @ask.intent('UpdateIntent')
 def update_meds():
     text = render_template('update_success') #add reprompt
+    save_data()
     return statement(text).standard_card(title="Medications Updated", text=text)
 
-@ask.intent('ProgressIntent')
+@ask.intent('RewardsIntent')
 def rewards():
-    text = render_template('rewards_prog', reward_delta=reward_delta) #add reprompt
+    text = render_template('rewards_prog', reward_delta=data['reward_delta']) 
     return statement(text).standard_card(title="Rewards Status", text=text)
 
 @ask.intent('ReportIntent')
-def progress_report():
-    text = render_template('report', day_streak=day_streak) #add reprompt
+def parent_report():
+    text = render_template('report', day_streak=data['day_streak'])
     return statement(text).standard_card(title="Status Reports", text=text)
 
 @ask.intent('PointsIntent')
 def points_report():
-    text = render_template('points', total=points) #add reprompt
+    text = render_template('points', total=data['points']) 
     return statement(text).standard_card(title="Points", text=text)
-
 
 @ask.session_ended
 def session_ended():
+    save_data()
     return statement("")
+
+def save_data():
+    with open('data.p', 'wb') as fh:
+        pickle.dump(data, fh)
 
 @app.before_request
 def before_request():
-    session['requests'] = int(session.get('requests') or 0) + 1
-    logging.debug("\t🔈\t\t".format(datetime.now().isoformat()))
+    print("😑")
+#     logging.debug("\t🔈\t\t".format(datetime.now().isoformat()))
         
 @app.before_first_request
 def before_first_request():
-    session['starts'] = int(session.get('starts') or 0) + 1
-    logging.debug("\t🥇 \t\t".format(datetime.now().isoformat()))
+    print("☣️")
+#     logging.debug("\t🥇 \t\t".format(datetime.now().isoformat()))
     
 
 if __name__ == '__main__':
@@ -135,5 +131,8 @@ if __name__ == '__main__':
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
         if verify == 'false':
             app.config['ASK_VERIFY_REQUESTS'] = False
+    with open('data.p', 'rb') as fh:
+        data = pickle.load(fh)
+        print(str(data))
     app.run(debug=True)
-    app.run(debug=True, threaded=True)
+#     app.run(debug=True, threaded=True)
