@@ -4,7 +4,7 @@ from datetime import datetime, date
 import logging, os, pickle
 
 from flask import Flask, json, render_template
-from flask_ask import Ask, request, session, question, statement
+from flask_ask import Ask, request, session, question, statement, confirm_intent
 
 app = Flask(__name__)
 ask = Ask(app, "/")
@@ -14,10 +14,9 @@ data = dict()
 @ask.on_session_started
 def start_session():
     print("📗\tStarting Session")
+    print("session: " + str(session))
+    print("request: " + str(request))
     logging.debug("Session started at {}".format(datetime.now().isoformat()))
-
-# Launch intent
-# This should query/update database and reconcile schedule also
 
 @ask.launch
 def handle_launch():
@@ -27,37 +26,12 @@ def handle_launch():
     welcome_card_text = render_template('welcome_card')
     return question(welcome_text).reprompt(welcome_re_text).standard_card(title="Pills Here", text=welcome_card_text)
 
-# Built-in intents http://d.pr/KKyx
-@ask.intent('AMAZON.StopIntent')
-def handle_stop():
-    farewell_text = render_template('stop_bye')
-    return statement(farewell_text)
-@ask.intent('AMAZON.CancelIntent')
-def handle_cancel():
-    farewell_text = render_template('cancel_bye')
-    return statement(farewell_text)
-@ask.intent('AMAZON.HelpIntent')
-def handle_help():
-    help_text = render_template('help_text')
-    return question(help_text)
-@ask.intent('AMAZON.NoIntent')
-def handle_no():
-    pass
-@ask.intent('AMAZON.YesIntent')
-def handle_yes():
-    pass
-@ask.intent('AMAZON.PreviousIntent')
-def handle_back():
-    pass
-@ask.intent('AMAZON.StartOverIntent')
-def start_over():
-    pass
-
 @ask.intent('PillsIntent')
 def pills():
-    text = render_template('pills')
     data['points'] = data['points'] + 1
     save_data()
+    print("pills")
+    text = render_template('pills')
     return question(text).standard_card(title="Pills Here", text=text)
 
 @ask.intent('GiveMedsIntent')
@@ -68,14 +42,25 @@ def give_meds():
 @ask.intent('TakeMedsIntent')
 def take_meds():
     print(get_dialog_state())
-    data['points'] = data['points'] + data['med_count']
-    data['day_streak'] = data['day_streak'] + 1
-    data['recent'] = datetime.utcnow()
-    save_data()
-    text = render_template('take_meds')
-    re_text = render_template('take_meds_re')
-    card_text = render_template('take_meds_card')
-    return question(text).reprompt(re_text).standard_card(title="Just Do It", text=card_text)
+    print("session: " + str(session))
+    print("request: " + str(request['intent']['confirmationStatus']))
+    
+    status = request['intent']['confirmationStatus']
+    confirmed = True if status=='CONFIRMED' else False
+    
+    if confirmed:
+        data['points'] = data['points'] + data['med_count']
+        data['day_streak'] = data['day_streak'] + 1
+        data['recent'] = datetime.utcnow()
+        save_data()
+        print("saved")
+        return question(render_template('pills')).standard_card(title="Meds Taken", text=render_template('pills'))
+    else:
+        text = render_template('take_meds_text')
+        re_text = render_template('take_meds_re')
+        card_text = render_template('take_meds_card')
+        print("returning")
+        return confirm_intent(text).reprompt(re_text).standard_card(title="Just Do It", text=card_text)
 
 @ask.intent('RecentIntent')
 def recent_meds():
@@ -116,6 +101,12 @@ def points_report():
     text = render_template('points', total=data['points']) 
     return question(text).standard_card(title="Points", text=text)
 
+@ask.intent('WhichIntent')
+def which_meds():
+    meds = json.dumps(data['meds'])
+    text = render_template('which', meds=meds) 
+    return question(text).standard_card(title="Current Meds", text=text)
+
 @ask.session_ended
 def session_ended():
     save_data()
@@ -137,6 +128,35 @@ def before_first_request():
     
 def get_dialog_state():
     return session['dialogState']
+
+
+# Built-in intents http://d.pr/KKyx
+@ask.intent('AMAZON.StopIntent')
+def handle_stop():
+    farewell_text = render_template('stop_bye')
+    return statement(farewell_text)
+@ask.intent('AMAZON.CancelIntent')
+def handle_cancel():
+    farewell_text = render_template('cancel_bye')
+    return statement(farewell_text)
+# @ask.intent('HelpIntent')
+@ask.intent('AMAZON.HelpIntent')
+def handle_help():
+    help_text = render_template('help_text')
+    return question(help_text)
+@ask.intent('AMAZON.NoIntent')
+def handle_no():
+    pass
+@ask.intent('AMAZON.YesIntent')
+def handle_yes():
+    pass
+@ask.intent('AMAZON.PreviousIntent')
+def handle_back():
+    print("previous")
+    pass
+@ask.intent('AMAZON.StartOverIntent')
+def start_over():
+    pass
 
 if __name__ == '__main__':
     if 'ASK_VERIFY_REQUESTS' in os.environ:

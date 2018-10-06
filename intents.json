@@ -1,0 +1,206 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "meds",
+            "intents": [
+                {
+                    "name": "HelpIntent",
+                    "slots": [],
+                    "samples": [
+                        "help"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.MoreIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateSettingsIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NextIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PreviousIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollRightIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollLeftIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "PillsIntent",
+                    "slots": [],
+                    "samples": [
+                        "pill me"
+                    ]
+                },
+                {
+                    "name": "TakeMedsIntent",
+                    "slots": [],
+                    "samples": [
+                        "good morning",
+                        "take vitamins",
+                        "open bottles",
+                        "log intake",
+                        "time for medications"
+                    ]
+                },
+                {
+                    "name": "UpdateIntent",
+                    "slots": [],
+                    "samples": [
+                        "query database",
+                        "check database"
+                    ]
+                },
+                {
+                    "name": "ReportIntent",
+                    "slots": [],
+                    "samples": [
+                        "report streak",
+                        "parental report",
+                        "how long is my streak"
+                    ]
+                },
+                {
+                    "name": "RewardsIntent",
+                    "slots": [],
+                    "samples": [
+                        "rewards status",
+                        "rewards progress",
+                        "when is next reward"
+                    ]
+                },
+                {
+                    "name": "PointsIntent",
+                    "slots": [],
+                    "samples": [
+                        "total points",
+                        "points status",
+                        "what are my points",
+                        "how many points",
+                        "how many points do I have"
+                    ]
+                },
+                {
+                    "name": "RecentIntent",
+                    "slots": [],
+                    "samples": [
+                        "last meds",
+                        "most recent time",
+                        "recent meds",
+                        "last time took med"
+                    ]
+                },
+                {
+                    "name": "WhichIntent",
+                    "slots": [],
+                    "samples": [
+                        "Which medications am I taking",
+                        "What am I prescribed",
+                        "Which prescriptions am I on"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "TakeMedsIntent",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.410216444710"
+                    },
+                    "slots": []
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Confirm.Intent.410216444710",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "yep"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "yea"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "yeah"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "finished"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "complete"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "done"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "don"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "sure"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "ok"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "yes"
+                    }
+                ]
+            }
+        ]
+    }
+}

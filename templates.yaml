@@ -2,7 +2,6 @@ welcome: |
   Welcome to Medication Scheduler
 help_text: | 
   You can use this skill to encourage healthy habits
-
 welcome_re: |
   Medication Tracker. How may I help you?
 welcome_card: |
@@ -15,12 +14,12 @@ help_text: |
   MedSched is an Alexa skill that reinforces medication compliance. Each time you take your medications use the skill to record your progress.
 give_meds: |
   You are scheduled to take {{ med_count }} things today
-take_meds: |
+take_meds_text: |
   Please take your medication now
 take_meds_re: |
   Have you taken your medication?
 take_meds_card: |
-  Time to make the donuts
+  Here it comes
 report: |
   You have been on schedule for {{ day_streak }} days.
 good: |
@@ -40,14 +39,12 @@ points: |
 update_success: |
   Medication schedule has been updated based on database
 update_fail: |
-  Problem update status from database
+  Problem updating from database
 logging_success: |
   Your progress has been updated.
 logging_fail: |
   I am unable to save the current days intake.
 recent: |
   Your last medication was taken {{ delta }} ago.
-
-  
-
-
+which: |
+  Your current medications are as follows {{ meds }}
