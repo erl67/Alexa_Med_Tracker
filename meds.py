@@ -60,7 +60,7 @@ def take_meds():
         re_text = render_template('take_meds_re')
         card_text = render_template('take_meds_card')
         print("returning")
-        return confirm_intent(text).reprompt(re_text).standard_card(title="Just Do It", text=card_text)
+        return confirm_intent(text).standard_card(title="Just Do It", text=card_text)
 
 @ask.intent('RecentIntent')
 def recent_meds():
