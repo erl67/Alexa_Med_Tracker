@@ -16,9 +16,9 @@ give_meds: |
 take_meds: |
   Please take your medication now
 take_meds_re: |
-  Are taking your medication?
+  Have you taken your medication?
 take_meds_card: |
-  Take to make the donuts
+  Time to make the donuts
 report: |
   You have been on schedule for {{ day_streak }} days.
 good: |

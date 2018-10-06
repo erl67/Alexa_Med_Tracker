@@ -68,7 +68,7 @@ def pills():
     text = render_template('pills')
     data['points'] = data['points'] + 1
     save_data()
-    return statement(text).standard_card(title="Pills Here", text=text)
+    return question(text).standard_card(title="Pills Here", text=text)
 
 @ask.intent('GiveMedsIntent')
 def give_meds():
@@ -77,6 +77,7 @@ def give_meds():
 
 @ask.intent('TakeMedsIntent')
 def take_meds():
+    print(get_dialog_state())
     data['points'] = data['points'] + data['med_count']
     data['day_streak'] = data['day_streak'] + 1
     save_data()
@@ -118,12 +119,15 @@ def save_data():
 @app.before_request
 def before_request():
     print("😑")
-#     logging.debug("\t🔈\t\t".format(datetime.now().isoformat()))
+    logging.debug("\t🔈\t\t".format(datetime.now().isoformat()))
         
 @app.before_first_request
 def before_first_request():
     print("☣️")
-#     logging.debug("\t🥇 \t\t".format(datetime.now().isoformat()))
+    logging.debug("\t🥇 \t\t".format(datetime.now().isoformat()))
+    
+def get_dialog_state():
+    return session['dialogState']
     
 
 if __name__ == '__main__':
