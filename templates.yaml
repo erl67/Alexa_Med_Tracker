@@ -1,15 +1,45 @@
-launch: "launch welcome"
-welcome: "Welcome to the Alexa Skills Kit, you can say hello"
-hello: "Hello world!"
-help: "You can say hello to me!"
+welcome: "Welcome to Medication Scheduler"
+help_text: "You can use this skill to encourage healthy habits"
 
 welcome_re: |
   Medication Tracker. How may I help you?
 welcome_card: |
-  Medication Tracker is an Alexa skill written by ...
+  MedSched is an Alexa skill
 stop_bye: |
   Goodbye!
 cancel_bye: |
   OK, goodbye!
 help_text: |
-  Medication Tracker is an Alexa skill that does things. This is where the developer would normally explain how to do them.
+  MedSched is an Alexa skill that reinforces medication compliance. Each time you take your medications use the skill to record your progress.
+give_meds: |
+  You are scheduled to take {{ med_count }} things today
+take_meds: |
+  Are they all gone?
+report: |
+  You have been on schedule for {{ day_streak }} days.
+good: |
+  Keep up the good work.
+best: |
+  New high score.
+bad: |
+  Try to do better.
+worse: |
+  Get your affairs in order.
+pills: |
+  Pills Here
+rewards_prog: |
+  You have {{ reward_delta }} days until your next level reward.
+points: |
+  You have collected {{ total }} points.
+update_success: |
+  Medication schedule has been updated based on database
+update_fail: |
+  Problem update status from database
+logging_success: |
+  Your progress has been updated.
+logging_fail: |
+  I am unable to save the current days intake.
+
+  
+
+
