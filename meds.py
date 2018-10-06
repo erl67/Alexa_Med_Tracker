@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import logging
+import logging, os, re
 from datetime import datetime
 from flask import Flask, json, render_template
 from flask_ask import Ask, request, session, question, statement
@@ -150,6 +150,15 @@ def before_first_request():
     
 def eprint(*args, **kwargs):
     print(*args, file=stderr, **kwargs)
+    
+TAG_RE = re.compile(r'<[^>]+>')
+def remove_tags(text):
+    return TAG_RE.sub('', text)
 
 if __name__ == '__main__':
+    if 'ASK_VERIFY_REQUESTS' in os.environ:
+        verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
+        if verify == 'false':
+            app.config['ASK_VERIFY_REQUESTS'] = False
+    app.run(debug=True)
     app.run(debug=True, threaded=True)
