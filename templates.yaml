@@ -1,17 +1,17 @@
 welcome: |
-  Welcome to Medication Scheduler
+  Welcome to MediSchedule
 help_text: | 
   You can use this skill to encourage healthy habits
 welcome_re: |
-  Medication Tracker. How may I help you?
+  MedicatiSchedule. How may I help you?
 welcome_card: |
-  MedSched is an Alexa skill
+  MediSchedule is an Alexa skill
 stop_bye: |
   Goodbye!
 cancel_bye: |
   OK, goodbye!
 help_text: |
-  MedSched is an Alexa skill that reinforces medication compliance. Each time you take your medications use the skill to record your progress.
+  MediSchedule is an Alexa skill that reinforces medication compliance. Each time you take your medications use the skill to record your progress.
 give_meds: |
   You are scheduled to take {{ med_count }} things today
 take_meds_text: |
